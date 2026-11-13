@@ -62,7 +62,11 @@ src/rpg/
 ├── combate/             # Batalha, CalculadoraDeDano, CalculadoraDanoPadrao
 └── ui/                  # Tela, TelaConsole
 ```
+---
 
+## Diagrama de classes
+
+![Diagrama de classes](docs/img/diagrama-classes.png)
 ---
 
 ## Conceitos de POO

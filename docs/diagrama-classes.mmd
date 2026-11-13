@@ -1,0 +1,148 @@
+classDiagram
+    direction TB
+    class Combatente {
+        <<interface>>
+        +getNome() String
+        +getVida() int
+        +getVidaMaxima() int
+        +getAtaque() int
+        +getDefesa() int
+        +receberDano(int dano) int
+        +estaVivo() boolean
+    }
+    class Curavel {
+        <<interface>>
+        +curar(int quantidade) int
+    }
+    class Personagem {
+        <<abstract>>
+        -nome : String
+        -vida : int
+        -vidaMaxima : int
+        -ataque : int
+        -defesa : int
+        +receberDano(int dano) int
+        #recuperarVida(int qtd) int
+        +estaVivo() boolean
+    }
+    class Heroi {
+        <<abstract>>
+        -habilidade : Habilidade
+        -equipamentos : ArrayList~Equipavel~
+        -energia : int
+        -energiaMaxima : int
+        -defendendo : boolean
+        +getClasse()* String
+        +getAtaque() int
+        +getDefesa() int
+        +receberDano(int dano) int
+        +curar(int) int
+        +equipar(Equipavel) void
+        +podeUsarHabilidade() boolean
+        +comecarTurno() void
+        +defender() void
+    }
+    class Guerreiro
+    class Mago
+    class Arqueiro
+    class Inimigo {
+        <<abstract>>
+        +jogarTurno(Combatente, CalculadoraDeDano)* String
+        #ataqueNormal(Combatente, CalculadoraDeDano) String
+    }
+    class Goblin
+    class Orc { -turno : int }
+    class Dragao { -turno : int }
+    Combatente <|.. Personagem
+    Curavel <|.. Heroi
+    Personagem <|-- Heroi
+    Personagem <|-- Inimigo
+    Heroi <|-- Guerreiro
+    Heroi <|-- Mago
+    Heroi <|-- Arqueiro
+    Inimigo <|-- Goblin
+    Inimigo <|-- Orc
+    Inimigo <|-- Dragao
+
+    class Habilidade {
+        <<interface>>
+        +getNome() String
+        +getCusto() int
+        +usar(Combatente, Combatente, CalculadoraDeDano) String
+    }
+    class GolpePoderoso
+    class BolaDeFogo
+    class TiroCerteiro
+    Habilidade <|.. GolpePoderoso
+    Habilidade <|.. BolaDeFogo
+    Habilidade <|.. TiroCerteiro
+    Heroi o-- "1" Habilidade
+
+    class Item {
+        <<interface>>
+        +getNome() String
+        +getDescricao() String
+    }
+    class Consumivel {
+        <<interface>>
+        +usar(Heroi) String
+    }
+    class Equipavel {
+        <<interface>>
+        +getBonusAtaque() int
+        +getBonusDefesa() int
+    }
+    class PocaoDeCura { -cura : int }
+    class Arma {
+        -nome : String
+        -bonus : int
+    }
+    class Armadura {
+        -nome : String
+        -bonus : int
+    }
+    class Inventario {
+        -itens : ArrayList~Consumivel~
+        +adicionar(Consumivel) void
+        +pegar(int) Consumivel
+        +tamanho() int
+    }
+    Item <|-- Consumivel
+    Item <|-- Equipavel
+    Consumivel <|.. PocaoDeCura
+    Equipavel <|.. Arma
+    Equipavel <|.. Armadura
+    Inventario o-- "*" Consumivel
+    Heroi o-- "*" Equipavel
+
+    class CalculadoraDeDano {
+        <<interface>>
+        +calcular(int ataque, int defesa) int
+    }
+    class CalculadoraDanoPadrao { -random : Random }
+    CalculadoraDeDano <|.. CalculadoraDanoPadrao
+    class Batalha {
+        -tela : Tela
+        -calculadora : CalculadoraDeDano
+        +lutar(Heroi, Inimigo, Inventario) boolean
+    }
+    class Tela {
+        <<interface>>
+        +mostrar(String) void
+        +titulo(String) void
+        +lerNumero(String, int, int) int
+        +lerTexto(String) String
+    }
+    class TelaConsole { -scanner : Scanner }
+    Tela <|.. TelaConsole
+    Batalha --> Tela
+    Batalha --> CalculadoraDeDano
+    class Jogo {
+        -tela : Tela
+        -batalha : Batalha
+        +iniciar() void
+    }
+    class Main { +main(String[]) void$ }
+    Jogo *-- Batalha
+    Jogo --> Tela
+    Main ..> Jogo : cria
